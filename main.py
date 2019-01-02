@@ -2,6 +2,9 @@ from coinmarketcap import Market
 import matplotlib.pyplot as plt
 import pandas as pd
 import time
+import requests
+import json
+
 # #---------------------------------------------------------------------------------------#
 
 #Aula 01
@@ -46,35 +49,42 @@ import time
 # df = pd.read_csv("john.csv")
 # print(df)
 
-def recebe_btc(lista_btc):
-    market = Market()
-    ticker = market.ticker(convert = "BRL")
-    data = ticker['data']['1']['quotes']['BRL']['price']
-    btc = data
-    lista_btc.append(btc)
-    return lista_btc
+# def recebe_btc(lista_btc):
+#     market = Market()
+#     ticker = market.ticker(convert = "BRL")
+#     data = ticker['data']['1']['quotes']['BRL']['price']
+#     btc = data
+#     lista_btc.append(btc)
+#     return lista_btc
 
-def recebe_xrp(lista_xrp):
-    market = Market()
-    ticker = market.ticker(convert = "BRL")
-    data = ticker['data']['52']['quotes']['BRL']['price']
-    xrp = data
-    lista_xrp.append(xrp)
-    return lista_xrp
+# def recebe_xrp(lista_xrp):
+#     market = Market()
+#     ticker = market.ticker(convert = "BRL")
+#     data = ticker['data']['52']['quotes']['BRL']['price']
+#     xrp = data
+#     lista_xrp.append(xrp)
+#     return lista_xrp
 
-lista_btc = []
-lista_xrp = []
-fig = plt.figure(figsize=(10,10))
-fig2 = plt.figure(figsize=(10,10))
-ax = fig.gca()
-ax2 = fig2.gca()
+# lista_btc = []
+# lista_xrp = []
+# fig = plt.figure(figsize=(10,10))
+# fig2 = plt.figure(figsize=(10,10))
+# ax = fig.gca()
+# ax2 = fig2.gca()
 
-while True:
-    ax.clear()
-    ax2.clear()
-    ax.plot(recebe_btc(lista_btc))
-    ax2.plot(recebe_xrp(lista_xrp))
-    plt.pause(1)
-
+# while True:
+#     ax.clear()
+#     ax2.clear()
+#     ax.plot(recebe_btc(lista_btc))
+#     ax2.plot(recebe_xrp(lista_xrp))
+#     plt.pause(1)
+#---------------------------------------------------------------------------------------#
 
 #---------------------------------------------------------------------------------------#
+#Aula 04
+bitfinex_ltc = "https://api.bitfinex.com/v1/pubticker/ltcbtc"
+data_bitfinex_ltc = requests.get(url=bitfinex_ltc)
+binary_data = data_bitfinex_ltc.content
+output_bitfinex = json.loads(binary_data)
+print(output_bitfinex['bid'])
+print(output_bitfinex['ask'])
