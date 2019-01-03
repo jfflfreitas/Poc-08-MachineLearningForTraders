@@ -82,9 +82,40 @@ import json
 
 #---------------------------------------------------------------------------------------#
 #Aula 04
-bitfinex_ltc = "https://api.bitfinex.com/v1/pubticker/ltcbtc"
-data_bitfinex_ltc = requests.get(url=bitfinex_ltc)
-binary_data = data_bitfinex_ltc.content
-output_bitfinex = json.loads(binary_data)
-print(output_bitfinex['bid'])
-print(output_bitfinex['ask'])
+# bitfinex_ltc = "https://api.bitfinex.com/v1/pubticker/ltcbtc"
+# data_bitfinex_ltc = requests.get(url=bitfinex_ltc)
+# binary_data = data_bitfinex_ltc.content
+# output_bitfinex = json.loads(binary_data)
+# print(output_bitfinex['bid'])
+# print(output_bitfinex['ask'])
+fig = plt.figure(figsize=(10,10))
+ax = fig.gca()
+
+grava = open("tickers.csv", "w")
+grava.write("bid,ask\n")
+grava.close()
+
+def get_tickers():
+    bitfinex_ltc = "https://api.bitfinex.com/v1/pubticker/ltcbtc"
+    data_bitfinex = requests.get(url=bitfinex_ltc)
+    binary_bitfnex = data_bitfinex.content
+    output_bitfinex = json.loads(binary_bitfnex)
+
+    grava = open("tickers.csv", "a")
+    grava = write(str(output_bitfinex['bid'])+","+str(output_bitfinex['ask']))
+    grava.close()
+
+
+
+def plot():
+    df = pd.read_csv("tickers.csv")
+    if len(df) > 1:
+        ax.clear()
+        bid = df['bid']
+        ask = df['ask']
+        ax.plot(bid)
+        ax.plot(ask)
+        plt.pause(1)
+        
+while True:
+    plot()
