@@ -4,6 +4,8 @@ import pandas as pd
 import time
 import requests
 import json
+import os
+import numpy as np
 
 # #---------------------------------------------------------------------------------------#
 
@@ -88,12 +90,60 @@ import json
 # output_bitfinex = json.loads(binary_data)
 # print(output_bitfinex['bid'])
 # print(output_bitfinex['ask'])
-fig = plt.figure(figsize=(10,10))
-ax = fig.gca()
+# fig = plt.figure(figsize=(10,10))
+# ax = fig.gca()
+
+# grava = open("tickers.csv", "w")
+# grava.write("bid,ask\n")
+# grava.close()
+
+# def get_tickers():
+#     bitfinex_ltc = "https://api.bitfinex.com/v1/pubticker/ltcbtc"
+#     data_bitfinex = requests.get(url=bitfinex_ltc)
+#     binary_bitfnex = data_bitfinex.content
+#     output_bitfinex = json.loads(binary_bitfnex) 
+#     grava = open("tickers.csv", "a")
+#     grava.write(str(output_bitfinex['bid'])+","+str(output_bitfinex['ask'])+"\n")
+#     grava.close()
+
+
+
+# def plot():
+#     df = pd.read_csv("tickers.csv")
+#     if len(df) > 1:
+#         ax.clear()
+#         bid = df['bid']
+#         ask = df['ask']
+#         ax.plot(bid, label = "Bid - Venda")
+#         ax.plot(ask, label = "Ask - Compra")
+#         plt.legend()
+#         plt.pause(2)
+        
+# while True:
+#         try:
+#                 get_tickers()
+#         except:
+#                 print("Erro no servidor")
+#                 time.sleep(5)
+#         try:
+#                 plot()
+#         except:
+#                 print("Erro na plotagem")
+#                 time.sleep(1)
+#---------------------------------------------------------------------------------------#
+
+#---------------------------------------------------------------------------------------#
+#Aula 05
+
+
+
 
 grava = open("tickers.csv", "w")
-grava.write("bid,ask\n")
+grava.write("bid, ask\n")
 grava.close()
+fig = plt.figure(figsize=(10,10))
+ax = fig.gca()
+file_exists = os.path.isfile("tickers.csv")
 
 def get_tickers():
     bitfinex_ltc = "https://api.bitfinex.com/v1/pubticker/ltcbtc"
@@ -101,30 +151,30 @@ def get_tickers():
     binary_bitfnex = data_bitfinex.content
     output_bitfinex = json.loads(binary_bitfnex) 
     grava = open("tickers.csv", "a")
-    grava.write(str(output_bitfinex['bid'])+","+str(output_bitfinex['ask'])+"\n")
+    grava.write(str(output_bitfinex['bid'])+","+str(output_bitfinex['ask'])+'   \n')
     grava.close()
 
+def spread(bid, ask):
+        porcento = ask / 100
+        diferenca = ask - bid
+        porcentagem = diferenca / porcento
 
+        return porcentagem
 
 def plot():
-    df = pd.read_csv("tickers.csv")
-    if len(df) > 1:
-        ax.clear()
-        bid = df['bid']
-        ask = df['ask']
-        ax.plot(bid, label = "Bid - Venda")
-        ax.plot(ask, label = "Ask - Compra")
-        plt.legend()
-        plt.pause(2)
-        
+        df = pd.read_csv("tickers.csv")
+        if len(df) > 1:
+                ax.clear()
+                bid = df['bid']
+                ask = df['ask']
+
+                diferenca = ask[-1:] - bid[-1:]
+                plt.title("Litecoin / BTC")
+                ax.set_xlim(len(bid)/10, len(bid)+(len(bid)/4)+5)
+                ax.plot(bid, label = "BID - Venda LTC" + str(np.around(float(bid[-1:]),8)), color = 'green', alpha = 0.5)
+                ax.plot(bid, label = "ASK - COMPRA LTC" + str(np.around(float(bid[-1:]),8)), color = 'red', alpha = 0.5)
+                plt.pause(2)
+
 while True:
-        try:
-                get_tickers()
-        except:
-                print("Erro no servidor")
-                time.sleep(5)
-        try:
-                plot()
-        except:
-                print("Erro na plotagem")
-                time.sleep(1)
+        get_tickers()
+        plot()  
